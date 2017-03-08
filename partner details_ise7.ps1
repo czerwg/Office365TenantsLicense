@@ -1,9 +1,9 @@
 ﻿#Define CSS Style
 # Variables
 # where to save report
-$savefile = "$home\Desktop\Office365Licenses.html"
+$savefile = "$env:USERPROFILE\Desktop\Office365Licenses.html"
 # Where to store the admin password
-$credstore ="$home\Appdata\Roaming\admincred.txt"
+$credstore ="$env:APPDATA\admincred.txt"
 # Details of global admin 
 $glbadmname = "gczerw@ers.ie"
 # Build CSS 
@@ -109,7 +109,14 @@ h3 {
                 
         }
 
+if (!(Get-Module -ListAvailable -Name MsOnline)) {
+     Write-Warning "Install office 365 admin powershell module"
+     break
+}
+
 #Requires -Modules MsOnline
+
+
 if (!(Test-Path $credstore)) 
 {
 read-host -assecurestring -Prompt "Enter Office 365 $glbadmname credentials or `nchange variable /glbadmname/ on the top of script" | convertfrom-securestring | out-file $credstore
@@ -138,6 +145,7 @@ catch
 }
 
 if (Test-Path $savefile){Write-host "Report already exist it will be overwritten"; Read-Host "Press ENTER to continue"}
+Write-Warning "Please Wait building the report" 
 
 $partner = Get-MsolPartnerContract
 $Subscriptions= $partner | %{
