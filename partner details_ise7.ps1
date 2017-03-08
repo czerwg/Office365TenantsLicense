@@ -1,10 +1,12 @@
 ﻿#Define CSS Style
 # Variables
+# where to save report
 $savefile = "$home\Desktop\Office365Licenses.html"
+# Where to store the admin password
 $credstore ="$home\Appdata\Roaming\admincred.txt"
+# Details of global admin 
 $glbadmname = "gczerw@ers.ie"
-
-#break
+# Build CSS 
 $head = @’
 <style>
 body { background-color:#dddddd;
@@ -163,17 +165,12 @@ $class.Value = "due"}
 #$td.childnodes.item(2).attributes.append($class) | Out-Null
 $en.table.tr[$_].attributes.append($class)  | Out-Null
 }
-
 $enabled1= "<H2>Licenses in state enabled</H2> <H3>Red color renewal in next 30 days.</H3>" + $en.InnerXml  |Out-String
-
 # Assembly all parts:
 $complete = ConvertTo-Html -head $head -PostContent $susp,$warn,$enabled1 -PreContent "<H1>Licenses status Office365 - created on $(Get-Date -Format d) </H2>" 
-#Convert the internal SKUs to human readable.
-foreach ($key in $SKUs.GetEnumerator().Keys) {
-$complete= $complete.Replace($key,$SKUs.$key)
-}
+# Convert the internal SKUs to human readable.
+ foreach ($key in $SKUs.Keys.GetEnumerator()) {
+ $complete= $complete.Replace($key,$SKUs.$key)
+ }
 #Save the file
 $complete| Out-File $savefile
-
-break
-$en.table.tr[1].td.Item(4)
