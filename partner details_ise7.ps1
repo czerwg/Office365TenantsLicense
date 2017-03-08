@@ -131,7 +131,6 @@ catch
 Write-Warning "Something is wrong with stored credentials try delete file $credstore and save credentials again"
 }
 
-
 #$cred = Get-Credential -Message "Provide your Office 365 username and password"
 try
 {
